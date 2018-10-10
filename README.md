@@ -1,0 +1,2 @@
+# Skype-tasarlama
+dadasd
