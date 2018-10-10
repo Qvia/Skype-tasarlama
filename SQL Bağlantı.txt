@@ -1,0 +1,49 @@
+SQL Server de ilk olarak tablolar oluþtururuz.
+Ayný þekilde C# Form oluþturuyoruz.
+Form da ilk olarak yazacaðýmýz kod;
+
+using System.Data.SqlClient;
+eklememiz gerekiyor.
+
+Öncelikle SqlConnection , SqlDataAdapter,SqlCommand ve Dataset 
+nesnemizi tekrar tekrar tanýmlamamak için Public olarak tanýmlýyoruz..
+Verilerimizi çekme iþlemini de bir kaç yerde 
+kullanacaðýmýz için rastgele bir metot tanýmlýyoruz 
+örneðin; doldur,baðlantýdoldur gibi.
+
+kodlar baðlama kodlarý bu þekilde ;
+
+void doldur()
+   {
+	baglanti = new SqlConnection("server=.; Initial Catalog=okul;Integrated Security=SSPI"); 'Bu kodumuz öncelikle her bilgisayarda veya farklý SQL Sürümlerinde farklý yazým þekilinde olabiliyor..
+	// ilk kodumuzda SQL Den forma baðlantý kurabilmek için serverimizi yani bilgisayarda kurulu SQL Yolunu belirtiyoruz.
+	da = new SqlDataAdapter("Select *From ogrenci", baglanti);
+	// burada da ayný yola benzer tablonun baglantýsýný alýyoruz bu sefer.
+	ds = new DataSet();
+	baglanti.Open();
+	// baglanti.open yani baglantýyý açma komutu kýsaca bildiðimiz üzere.
+	da.Fill(ds, "ogrenci");
+	dataGridView1.DataSource = ds.Tables["ogrenci"];
+	baglanti.Close();
+	// ardýndan baglantýmýzý kapatýyoruz.
+
+Bu sefer ise Oluþturmuþ olduðumuz bu metodu Form ilk açýldýðýnda 
+çalýþtýrmak için Form_Load olayýný ekliyoruz. Bu sayede form açýlýr 
+açýlmaz verilerimizin DataGridView' degörüntülenmesi saðlanacaktýr.
+
+kodlar bu þekilde;
+
+prviate void Form1_Load(object sender, EventArgs e)
+	{
+	    doldur();
+	}
+
+Sýrada ekle butonuna bastýðýmýzda textbox'lara girilen verilerin sql tablomuza kayýt edilmesi için ise;
+
+private void button1_click(object sender, EventArgs e) //Ekle butonu
+	{	
+	
+	cmd = new Sqlcommand();
+	baglanti.open();
+	cmd.Connection = con;
+	cmd.CommandText = "insert into ogrenci(ogrenci_no,ogrenci_ad,ogrenci_soyad,ogrenci_sehir) values (" + textBox1.Text + ",'" + textBox2.Text + "','" + textbox3.text + "','" + textbox4.text + "');
